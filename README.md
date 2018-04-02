@@ -24,8 +24,7 @@ docker stack deploy  -c docker-compose.yml myapp
 ```shell
 docker service update myapp_web --force 
 ```
-6.
-install pontainer manager
+6. install pontainer manager
 ```shell
  docker service create --name portainer --publish 9000:9000 --replicas=1 --constraint 'node.role == manager' --mount type=bind,src=//var/run/docker.sock,dst=/var/run/docker.sock --mount type=bind,src=//opt/portainer,dst=/data portainer/portainer -H unix:///var/run/docker.sock
 ```
