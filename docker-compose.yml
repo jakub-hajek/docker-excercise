@@ -1,0 +1,56 @@
+version: '3.4'
+services:
+    web:
+        image: hajekjakub/web:0.1.0-SNAPSHOT
+        restart: always
+        stop_signal: SIGQUIT
+        expose: 
+          - 80
+        ports:
+          - target: 80
+            published: 80
+            protocol: tcp
+        networks:
+          mainnet:
+            aliases:
+              - web
+              - apigw
+        #volumes:
+        #    - files:/path/insidecontainer
+        deploy:
+          mode: replicated
+          replicas: 2
+          update_config:
+            parallelism: 1
+            delay: 10s
+            order: start-first
+        environment:
+            - ENV_VARIABLE=value
+            - TZ=Europe/Prague
+    helloservice:
+        image: hajekjakub/hello-service:0.1.0-SNAPSHOT
+        restart: always
+        expose: 
+            - 8080
+        networks:
+          mainnet:
+            aliases:
+              - helloservice
+        deploy:
+          mode: replicated
+          replicas: 3
+          update_config:
+            parallelism: 1
+            delay: 10s
+            order: start-first
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:8080/test"]
+          interval: 1m
+          timeout: 10s
+          retries: 3
+          start_period: 40s
+        environment:
+            - TZ=Europe/Prague
+networks:
+  mainnet:
+
