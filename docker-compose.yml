@@ -51,6 +51,8 @@ services:
           start_period: 40s
         environment:
             - TZ=Europe/Prague
+            - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n
+        entrypoint: bash -c "java -Djava.security.egd=file:/dev/./urandom $$JAVA_OPTS -jar /app.jar"
 networks:
   mainnet:
 
